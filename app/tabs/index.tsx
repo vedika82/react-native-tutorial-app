@@ -7,7 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 // expo-image-picker provides launchImageLibraryAsync() 
 // method to display the system UI by choosing an image 
 // or a video from the device's media library
-import { useState } from 'react';
+import { useState,useEffect,useRef} from 'react';
 // Declare a state variable called selectedImage using 
 // the useState hook from React. We'll use this state variable to hold the URI of the selected image.
 import ImageViewer from '@/components/ImageViewer';
@@ -23,11 +23,18 @@ import EmojiSticker from '@/components/emojiSticker';
 // Double tap to scale the size of the emoji sticker and reduce the scale when double tapped again.
 // Pan to move the emoji sticker around the screen so that the user can place the sticker anywhere on the image.
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import * as MediaLibrary from 'expo-media-library';
+import {captureRef} from 'react-native-view-shot';
 // The @ symbol is a custom path alias for importing custom components and 
 // other modules instead of relative paths. Expo CLI automatically configures it in tsconfig.json.
 const PlaceholderImage = require('../../assets/images/background-image.png');
 
 export default function Index() {
+  const imageRef =  useRef<any>(null);
+  // Create a reference called imageRef using the useState() hook. 
+  // We'll attach this reference to the View component that wraps the ImageViewer 
+  // and emoji sticker components to capture the combined view as an image later.
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
    const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
    const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
         {/* Declare a boolean state variable, 
@@ -41,6 +48,10 @@ export default function Index() {
 //  which hides the modal until the user presses the button to open it.
   const [pickedEmoji, setPickedEmoji] = useState<ImageSourcePropType | undefined>(undefined);
 
+  useEffect(() => {
+    if (!permissionResponse?.granted) {
+    requestPermission();
+  }}, []);
    const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       // mediaTypes: ['images'],
@@ -65,9 +76,20 @@ export default function Index() {
   const onReset = () => {
     setShowAppOptions(false);
   };
+const onSaveImageAsync = async () => {
+    try {
+      const localUri = await captureRef(imageRef, {
+        height: 440,
+        quality: 1,
+      });
 
-  const onSaveImageAsync = async () => {
-    // we will implement this later
+      await MediaLibrary.saveToLibraryAsync(localUri);
+      if (localUri) {
+        alert('Saved!');
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
   const onAddSticker = () => {
     setIsModalVisible(true);
@@ -88,7 +110,7 @@ export default function Index() {
       {/* <Link href="/tabs/about" style={styles.button}>
         Go to About screen
       </Link> */}
-         <View style={styles.imageContainer}>
+         <View ref={imageRef} style={styles.imageContainer}>
           {/* //for displaying image and applying styles */}
         <ImageViewer imgSource={selectedImage||PlaceholderImage} />
         {pickedEmoji && <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />}
