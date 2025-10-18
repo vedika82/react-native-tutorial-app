@@ -16,6 +16,13 @@ import CircleButton from '@/components/circleButton';
 import EmojiPicker from '@/components/emojiPicker';
 import EmojiList from '@/components/emojiList';
 import EmojiSticker from '@/components/emojiSticker';
+// Gestures are a great way to provide an intuitive user experience in an app. 
+// The React Native Gesture Handler library provides built-in native components that can handle gestures.
+//  It recognizes pan, tap, rotation, and other gestures using the platform's native touch handling system.
+//  In this chapter, we'll add two different gestures using this library:
+// Double tap to scale the size of the emoji sticker and reduce the scale when double tapped again.
+// Pan to move the emoji sticker around the screen so that the user can place the sticker anywhere on the image.
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // The @ symbol is a custom path alias for importing custom components and 
 // other modules instead of relative paths. Expo CLI automatically configures it in tsconfig.json.
 const PlaceholderImage = require('../../assets/images/background-image.png');
@@ -73,7 +80,9 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
+    // <View style={styles.container}>
+    //for gesture handling we have remived the viwe root level and changed to gesture handler root view
+     <GestureHandlerRootView style={styles.container}>
       {/* <Text style={styles.text}>Home screen</Text>  */}
       {/* // added style to Text component */}
       {/* <Link href="/tabs/about" style={styles.button}>
@@ -109,7 +118,7 @@ export default function Index() {
         {/* Emoji list will go here */}
          <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
       </EmojiPicker>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 // we imported StyleSheet from 'react-native' to create styles for our components
