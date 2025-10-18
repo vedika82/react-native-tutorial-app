@@ -56,7 +56,7 @@ export default function Index() {
       setSelectedImage(result.assets[0].uri);
       setShowAppOptions(true);
     } else {
-      alert('You did not select any image.');
+      alert('You did not  any image.');
     }
   };
 // Add three placeholder functions for these buttons. 
