@@ -1,4 +1,4 @@
-import { Text, View,  StyleSheet, ImageSourcePropType } from 'react-native';
+import { Text, View,  StyleSheet, ImageSourcePropType, Platform } from 'react-native';
 import { Link } from 'expo-router';
 import {Image} from 'expo-image';
 import Button from '@/components/button';
@@ -25,6 +25,11 @@ import EmojiSticker from '@/components/emojiSticker';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as MediaLibrary from 'expo-media-library';
 import {captureRef} from 'react-native-view-shot';
+import domtoimage from 'dom-to-image';
+// To capture a screenshot on the web and save it as an image, 
+// we'll use a third-party library called dom-to-image. 
+// It takes a screenshot of any DOM node and turns it into a vector (SVG) or raster (PNG or JPEG) image.
+
 // The @ symbol is a custom path alias for importing custom components and 
 // other modules instead of relative paths. Expo CLI automatically configures it in tsconfig.json.
 const PlaceholderImage = require('../../assets/images/background-image.png');
@@ -76,22 +81,7 @@ export default function Index() {
   const onReset = () => {
     setShowAppOptions(false);
   };
-const onSaveImageAsync = async () => {
-    try {
-      const localUri = await captureRef(imageRef, {
-        height: 440,
-        quality: 1,
-      });
-
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      if (localUri) {
-        alert('Saved!');
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  const onAddSticker = () => {
+    const onAddSticker = () => {
     setIsModalVisible(true);
   };
   // Replace the comment in the onAddSticker() function to update the isModalVisible variable to true when the user presses the button. 
@@ -100,6 +90,39 @@ const onSaveImageAsync = async () => {
   const onModalClose = () => {
     setIsModalVisible(false);
   };
+const onSaveImageAsync = async () => {
+      if (Platform.OS !== 'web') {
+        try {
+          const localUri = await captureRef(imageRef, {
+            height: 440,
+            quality: 1,
+          });
+
+          await MediaLibrary.saveToLibraryAsync(localUri);
+          if (localUri) {
+            alert('Saved!');
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        try {
+          const dataUrl = await domtoimage.toJpeg(imageRef.current, {
+            quality: 0.95,
+            width: 320,
+            height: 440,
+          });
+
+          let link = document.createElement('a');
+          link.download = 'sticker-smash.jpeg';
+          link.href = dataUrl;
+          link.click();
+        } catch (e) {
+          console.log(e);
+        }
+      }
+  };
+
 
   return (
     // <View style={styles.container}>
