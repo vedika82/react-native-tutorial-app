@@ -5,6 +5,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    // Like the splash screen image, the "icon" property in the app.json file configures the app icon's path. 
+    // By default, a new Expo project defines the correct path to "./assets/images/icon.png"
     "scheme": "reactnativetutorial",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -30,6 +32,9 @@
       [
         "expo-splash-screen",
         {
+// Use a 1024x1024 image.
+// Use a .png file.
+// Use a transparent background.
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",

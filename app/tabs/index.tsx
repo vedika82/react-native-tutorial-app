@@ -125,6 +125,7 @@ const onSaveImageAsync = async () => {
 
 
   return (
+    
     // <View style={styles.container}>
     //for gesture handling we have remived the viwe root level and changed to gesture handler root view
      <GestureHandlerRootView style={styles.container}>
@@ -133,6 +134,7 @@ const onSaveImageAsync = async () => {
       {/* <Link href="/tabs/about" style={styles.button}>
         Go to About screen
       </Link> */}
+      
          <View ref={imageRef} style={styles.imageContainer}>
           {/* //for displaying image and applying styles */}
         <ImageViewer imgSource={selectedImage||PlaceholderImage} />
