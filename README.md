@@ -1,4 +1,4 @@
-#A Photo saving app
+# A Photo saving app
 
 This app is used is a photo editing app which is used to safe photos after doing some changes in the photo
 
